@@ -1,0 +1,15 @@
+# Use Ubuntu Precise
+FROM ubuntu:12.04
+
+## Basic Docker Setup for Ubuntu
+# Disable Upstart
+RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN ln -sf /bin/true /sbin/initctl
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get -y update
+RUN apt-get install -y sudo openssh-server curl lsb-release
+
+## Add Test-Kitchen Dependencies
+RUN useradd -d /home/kitchen -m -s /bin/bash kitchen
+RUN echo 'kitchen:kitchen' | chpasswd
+RUN echo 'kitchen ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
